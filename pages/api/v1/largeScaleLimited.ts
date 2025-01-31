@@ -11,17 +11,17 @@ type ApiResponse = {
   message: string;
 };
 
-const requestLimit = 50; // Limite de requisições por segundo
-let requestCount = 0; // Contador de requisições
-let lastResetTime = Date.now(); // Tempo da última reinicialização do contador
+const requestLimit = 5; 
+let requestCount = 0; 
+let lastResetTime = Date.now(); 
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<ApiResponse>) {
   const cacheKey = "large_scale_timestamp"; 
   const cachedTimestamp = await redis.get<number>(cacheKey); 
 
   if (Date.now() - lastResetTime > 1000) {
-    requestCount = 0; // Reinicia o contador
-    lastResetTime = Date.now(); // Atualiza o tempo da última reinicialização
+    requestCount = 0;
+    lastResetTime = Date.now(); 
   }
 
   if (requestCount >= requestLimit) {

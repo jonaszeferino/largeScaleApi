@@ -18,10 +18,14 @@ let lastResetTime = Date.now();
 export default async function handler(req: NextApiRequest, res: NextApiResponse<ApiResponse>) {
   const cacheKey = "large_scale_timestamp"; 
   const cachedTimestamp = await redis.get<number>(cacheKey); 
+  const cachedRequestCount = await redis.get<number>("request_count"); 
 
   if (Date.now() - lastResetTime > 1000) {
     requestCount = 0;
     lastResetTime = Date.now(); 
+    await redis.set("request_count", requestCount, { ex: 1 });
+  } else {
+    requestCount = cachedRequestCount || 0;
   }
 
   if (requestCount >= requestLimit) {
@@ -31,7 +35,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     });
   }
 
-  requestCount++; // Incrementa o contador de requisições
+  requestCount++;
+  await redis.set("request_count", requestCount, { ex: 1 });
 
   if (cachedTimestamp) {
     return res.status(200).json({ timestamp: Date.now(), message: "potato potato" });

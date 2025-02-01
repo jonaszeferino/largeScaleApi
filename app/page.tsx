@@ -97,10 +97,10 @@ export default function Home() {
             <div className={styles.actions}>
               <input
                 type="number"
-                placeholder="Number of requests (1-1000)"
+                placeholder="Number of requests (1-100)"
                 className={styles.input}
                 onChange={(e) => setNumRequests(Number(e.target.value))}
-                max="1000"
+                max="100"
               />
               <button
                 className={styles.button}
@@ -117,10 +117,10 @@ export default function Home() {
             <div className={styles.actions}>
               <input
                 type="number"
-                placeholder="Number of requests (1-1000)"
+                placeholder="Number of requests (1-100)"
                 className={styles.input}
                 onChange={(e) => setNumRequests(Number(e.target.value))}
-                max="1000"
+                max="100"
               />
               <button
                 className={styles.button}
@@ -137,10 +137,10 @@ export default function Home() {
             <div className={styles.actions}>
               <input
                 type="number"
-                placeholder="Number of requests (1-1000)"
+                placeholder="Number of requests (1-100)"
                 className={styles.input}
                 onChange={(e) => setNumRequests(Number(e.target.value))}
-                max="1000"
+                max="100"
               />
               <button
                 className={styles.button}

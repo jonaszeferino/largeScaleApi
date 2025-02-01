@@ -93,7 +93,7 @@ export default function Home() {
         <ul className={styles.list}>
           <li>
             <strong>/largeScale:</strong> Handles{" "}
-            <span className={styles.highlight}>650 requests per second - with cache</span>.
+            <span className={styles.highlight}>Using redis for cache</span>.
             <div className={styles.actions}>
               <input
                 type="number"
@@ -133,7 +133,7 @@ export default function Home() {
           </li>
           <li>
             <strong>/largeScaleNoCache:</strong>{" "}
-            <span className={styles.highlight}>200 requests per second - no cache</span>.
+            <span className={styles.highlight}>With no cache and no limit</span>.
             <div className={styles.actions}>
               <input
                 type="number"

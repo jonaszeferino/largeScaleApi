@@ -13,8 +13,8 @@ export default function Home() {
   const [statusCounts, setStatusCounts] = useState<Record<string, number>>({}); // Contador de status
 
   const handleTest = async (endpoint: string) => {
-    if (!numRequests || numRequests <= 0 || numRequests > 1000) {
-      alert("Please enter a valid number of requests (1 to 1000).");
+    if (!numRequests || numRequests <= 0 || numRequests > 100) {
+      alert("Please enter a valid number of requests (1 to 100).");
       return;
     }
 

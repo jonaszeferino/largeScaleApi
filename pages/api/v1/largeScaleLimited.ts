@@ -11,39 +11,28 @@ type ApiResponse = {
   message: string;
 };
 
-const requestLimit = 5; 
-let requestCount = 0; 
-let lastResetTime = Date.now(); 
+const requestLimit = 10; // Limite de requisições por segundo
+const windowTime = 1; // Janela de tempo em segundos
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<ApiResponse>) {
-  const cacheKey = "large_scale_timestamp"; 
-  const cachedTimestamp = await redis.get<number>(cacheKey); 
-  const cachedRequestCount = await redis.get<number>("request_count"); 
+  const cacheKey = "request_count"; // Chave para contar requisições
+  const currentTimestamp = Date.now();
 
-  if (Date.now() - lastResetTime > 1000) {
-    requestCount = 0;
-    lastResetTime = Date.now(); 
-    await redis.set("request_count", requestCount, { ex: 1 });
-  } else {
-    requestCount = cachedRequestCount || 0;
-  }
+  // Recupera o número atual de requisições do Redis
+  const requestCount = (await redis.get<number>(cacheKey)) || 0;
 
   if (requestCount >= requestLimit) {
-    return res.status(429).json({ 
-      timestamp: Date.now(),
-      message: "Too many requests, please try again later." 
+    // Limite excedido
+    return res.status(429).json({
+      timestamp: currentTimestamp,
+      message: "Too many requests, please try again later.",
     });
   }
 
-  requestCount++;
-  await redis.set("request_count", requestCount, { ex: 1 });
+  // Incrementa o contador no Redis com expiração de 1 segundo
+  await redis.set(cacheKey, requestCount + 1, { ex: windowTime });
 
-  if (cachedTimestamp) {
-    return res.status(200).json({ timestamp: Date.now(), message: "potato potato" });
-  }
-  const message = "potato potato"; 
-
-  await redis.set(cacheKey, Date.now(), { ex: 10 });
-
-  res.status(200).json({ timestamp: Date.now(), message });
+  // Resposta normal da API
+  const message = "potato potato";
+  return res.status(200).json({ timestamp: currentTimestamp, message });
 }
